@@ -1,5 +1,6 @@
 SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+TZ=Asia/Bangkok
 
 # Run every day at 07:30 and 16:00 (container timezone).
 30 7 * * * cd /workspace && /usr/local/bin/python /workspace/sync_visit_type_daily.py >> /workspace/logs/visit_sync.log 2>&1

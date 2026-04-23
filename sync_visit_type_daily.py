@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
+from zoneinfo import ZoneInfo
 
 try:
     import pymysql
@@ -32,10 +33,12 @@ SQL_FILES = {
     "mysql": "mysql_visit_type_count.sql",
     "postgres": "postgres_visit_type_count.sql",
 }
+DEFAULT_LOG_TIMEZONE = "Asia/Bangkok"
 
 
 def log(level: str, message: str) -> None:
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    timezone_name = os.getenv("SYNC_TIMEZONE", DEFAULT_LOG_TIMEZONE)
+    timestamp = datetime.now(ZoneInfo(timezone_name)).strftime("%Y-%m-%d %H:%M:%S")
     print(f"{timestamp} - {level.upper()} - {message}")
 
 

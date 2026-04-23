@@ -1,19 +1,24 @@
-2026-04-23 14:50:57 - ERROR - (2003, "Can't connect to MySQL server on '127.0.0.1' ([Errno 111] Connection refused)")
-2026-04-23 14:50:59 - ERROR - (2003, "Can't connect to MySQL server on '127.0.0.1' ([Errno 111] Connection refused)")
-2026-04-23 14:51:00 - ERROR - (2003, "Can't connect to MySQL server on '127.0.0.1' ([Errno 111] Connection refused)")
-2026-04-23 14:51:02 - ERROR - (2003, "Can't connect to MySQL server on '127.0.0.1' ([Errno 111] Connection refused)")
-2026-04-23 14:51:04 - ERROR - (2003, "Can't connect to MySQL server on '127.0.0.1' ([Errno 111] Connection refused)")
-2026-04-23 14:51:07 - ERROR - (2003, "Can't connect to MySQL server on '127.0.0.1' ([Errno 111] Connection refused)")
-2026-04-23 14:51:11 - ERROR - (2003, "Can't connect to MySQL server on '127.0.0.1' ([Errno 111] Connection refused)")
-2026-04-23 14:51:19 - ERROR - (2003, "Can't connect to MySQL server on '127.0.0.1' ([Errno 111] Connection refused)")
-2026-04-23 14:51:33 - ERROR - (2003, "Can't connect to MySQL server on '127.0.0.1' ([Errno 111] Connection refused)")
-2026-04-23 14:51:34 - ERROR - (2003, "Can't connect to MySQL server on '127.0.0.1' ([Errno 111] Connection refused)")
-2026-04-23 14:51:34 - ERROR - Initial startup run failed; cron will continue.
-2026-04-23 14:55:48 - INFO - Fetched 31 rows from mysql_visit_type_count.sql
-2026-04-23 14:55:48 - INFO - Prepared 31 API records
-2026-04-23 14:55:48 - INFO - POST completed with status_code=200
-2026-04-23 14:55:48 - INFO - Response: {"status_code":200,"body":{"code":200,"status":"success","message":"Data processed successfully","data":{"affectedRows":31,"recordsProcessed":31}}}
-2026-04-23 15:01:15 - INFO - Fetched 31 rows from mysql_visit_type_count.sql
-2026-04-23 15:01:15 - INFO - Prepared 31 API records
-2026-04-23 15:01:15 - INFO - POST completed with status_code=200
-2026-04-23 15:01:15 - INFO - Response: {"status_code":200,"body":{"code":200,"status":"success","message":"Data processed successfully","data":{"affectedRows":62,"recordsProcessed":31}}}
+2026-04-23 08:26:02 - INFO - Fetched 31 rows from mysql_visit_type_count.sql
+2026-04-23 08:26:02 - INFO - Prepared 31 API records
+2026-04-23 08:26:02 - INFO - POST completed with status_code=200
+2026-04-23 08:26:02 - INFO - Response: {"status_code":200,"body":{"code":200,"status":"success","message":"Data processed successfully","data":{"affectedRows":62,"recordsProcessed":31}}}
+2026-04-23 15:26:28 - INFO - Fetched 31 rows from mysql_visit_type_count.sql
+2026-04-23 15:26:29 - INFO - Prepared 31 API records
+2026-04-23 15:26:29 - INFO - POST completed with status_code=200
+2026-04-23 15:26:29 - INFO - Response: {"status_code":200,"body":{"code":200,"status":"success","message":"Data processed successfully","data":{"affectedRows":62,"recordsProcessed":31}}}
+2026-04-23 15:27:01 - INFO - Fetched 31 rows from mysql_visit_type_count.sql
+2026-04-23 15:27:01 - INFO - Prepared 31 API records
+2026-04-23 15:27:02 - INFO - POST completed with status_code=200
+2026-04-23 15:27:02 - INFO - Response: {"status_code":200,"body":{"code":200,"status":"success","message":"Data processed successfully","data":{"affectedRows":62,"recordsProcessed":31}}}
+2026-04-23 15:27:11 - INFO - Fetched 31 rows from mysql_visit_type_count.sql
+2026-04-23 15:27:11 - INFO - Prepared 31 API records
+2026-04-23 15:27:11 - INFO - POST completed with status_code=200
+2026-04-23 15:27:11 - INFO - Response: {"status_code":200,"body":{"code":200,"status":"success","message":"Data processed successfully","data":{"affectedRows":62,"recordsProcessed":31}}}
+2026-04-23 15:28:01 - INFO - Fetched 31 rows from mysql_visit_type_count.sql
+2026-04-23 15:28:01 - INFO - Prepared 31 API records
+2026-04-23 15:28:01 - INFO - POST completed with status_code=200
+2026-04-23 15:28:01 - INFO - Response: {"status_code":200,"body":{"code":200,"status":"success","message":"Data processed successfully","data":{"affectedRows":62,"recordsProcessed":31}}}
+2026-04-23 15:28:17 - INFO - Fetched 31 rows from mysql_visit_type_count.sql
+2026-04-23 15:28:17 - INFO - Prepared 31 API records
+2026-04-23 15:28:18 - INFO - POST completed with status_code=200
+2026-04-23 15:28:18 - INFO - Response: {"status_code":200,"body":{"code":200,"status":"success","message":"Data processed successfully","data":{"affectedRows":62,"recordsProcessed":31}}}
