@@ -9,6 +9,5 @@ if ! /usr/local/bin/python /workspace/sync_visit_type_daily.py >> /workspace/log
   echo "$(date '+%Y-%m-%d %H:%M:%S') - ERROR - Initial startup run failed; cron will continue." >> /workspace/logs/visit_sync.log
 fi
 
-# Load cron entries and run daemon in foreground.
-crontab /etc/cron.d/visit-sync
+# Cron reads /etc/cron.d/visit-sync directly.
 exec cron -f

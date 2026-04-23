@@ -17,7 +17,6 @@ COPY docker/cron/visit-sync.cron /etc/cron.d/visit-sync
 COPY docker/entrypoint.sh /entrypoint.sh
 
 RUN chmod 0644 /etc/cron.d/visit-sync \
-    && chmod +x /entrypoint.sh \
-    && crontab /etc/cron.d/visit-sync
+    && chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
