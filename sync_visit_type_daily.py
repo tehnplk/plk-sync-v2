@@ -79,7 +79,7 @@ def env_int(name: str, default: int) -> int:
 
 
 def get_db_type() -> str:
-    db_type = os.getenv("HOSXP_DB_TYPE", "mysql").strip().lower()
+    db_type = os.getenv("DB_TYPE", "mysql").strip().lower()
     aliases = {
         "mariadb": "mysql",
         "mysql": "mysql",
@@ -89,7 +89,7 @@ def get_db_type() -> str:
 
     if db_type not in aliases:
         allowed = ", ".join(sorted(aliases))
-        raise RuntimeError(f"Unsupported HOSXP_DB_TYPE={db_type!r}; use one of: {allowed}")
+        raise RuntimeError(f"Unsupported DB_TYPE={db_type!r}; use one of: {allowed}")
 
     return aliases[db_type]
 
@@ -146,12 +146,12 @@ def fetch_mysql_rows(sql_path: Path) -> list[dict[str, Any]]:
     statements = read_sql_statements(sql_path)
 
     connection = pymysql.connect(
-        host=require_env("HOSXP_DB_HOST"),
-        port=int(os.getenv("HOSXP_DB_PORT", "3306")),
-        user=require_env("HOSXP_DB_USER"),
-        password=require_env("HOSXP_DB_PASSWORD"),
-        database=require_env("HOSXP_DB_NAME"),
-        charset=os.getenv("HOSXP_DB_CHARSET", DEFAULT_CHARSET),
+        host=require_env("DB_HOST"),
+        port=int(os.getenv("DB_PORT", "3306")),
+        user=require_env("DB_USER"),
+        password=require_env("DB_PASSWORD"),
+        database=require_env("DB_NAME"),
+        charset=os.getenv("DB_CHARSET", DEFAULT_CHARSET),
         cursorclass=DictCursor,
         autocommit=True,
     )
@@ -175,11 +175,11 @@ def fetch_postgres_rows(sql_path: Path) -> list[dict[str, Any]]:
     statements = read_sql_statements(sql_path)
 
     connection = psycopg.connect(
-        host=require_env("HOSXP_DB_HOST"),
-        port=int(os.getenv("HOSXP_DB_PORT", "5432")),
-        user=require_env("HOSXP_DB_USER"),
-        password=require_env("HOSXP_DB_PASSWORD"),
-        dbname=require_env("HOSXP_DB_NAME"),
+        host=require_env("DB_HOST"),
+        port=int(os.getenv("DB_PORT", "5432")),
+        user=require_env("DB_USER"),
+        password=require_env("DB_PASSWORD"),
+        dbname=require_env("DB_NAME"),
         autocommit=True,
         row_factory=dict_row,
     )
@@ -250,7 +250,7 @@ def main() -> int:
     load_env(env_path)
 
     db_type = get_db_type()
-    sql_path = Path(os.getenv("HOSXP_SQL_FILE", SQL_FILES[db_type]))
+    sql_path = Path(os.getenv("SQL_FILE", SQL_FILES[db_type]))
     if not sql_path.is_absolute():
         sql_path = base_dir / sql_path
 
