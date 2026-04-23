@@ -16,7 +16,8 @@ RUN pip install --no-cache-dir -r /tmp/requirements.txt
 COPY docker/cron/visit-sync.cron /etc/cron.d/visit-sync
 COPY docker/entrypoint.sh /entrypoint.sh
 
-RUN chmod 0644 /etc/cron.d/visit-sync \
+RUN sed -i 's/\r$//' /entrypoint.sh /etc/cron.d/visit-sync \
+    && chmod 0644 /etc/cron.d/visit-sync \
     && chmod +x /entrypoint.sh
 
 ENTRYPOINT ["sh", "/entrypoint.sh"]
