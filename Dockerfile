@@ -19,4 +19,4 @@ COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod 0644 /etc/cron.d/visit-sync \
     && chmod +x /entrypoint.sh
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["sh", "/entrypoint.sh"]
