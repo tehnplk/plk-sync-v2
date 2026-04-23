@@ -1,0 +1,14 @@
+services:
+  visit-sync-cron:
+    build: .
+    container_name: plk-sync-v2
+    restart: unless-stopped
+    working_dir: /workspace
+    env_file:
+      - .env
+    environment:
+      - TZ=Asia/Bangkok
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./:/workspace

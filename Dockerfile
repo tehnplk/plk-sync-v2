@@ -1,0 +1,23 @@
+FROM python:3.13-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV TZ=Asia/Bangkok
+
+WORKDIR /workspace
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends cron tzdata \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+
+COPY docker/cron/visit-sync.cron /etc/cron.d/visit-sync
+COPY docker/entrypoint.sh /entrypoint.sh
+
+RUN chmod 0644 /etc/cron.d/visit-sync \
+    && chmod +x /entrypoint.sh \
+    && crontab /etc/cron.d/visit-sync
+
+ENTRYPOINT ["/entrypoint.sh"]
