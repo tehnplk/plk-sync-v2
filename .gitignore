@@ -3,4 +3,3 @@ __pycache__/
 *.py[cod]
 logs/
 *.log
-*_endpoint.local.txt

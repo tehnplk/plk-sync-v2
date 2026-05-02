@@ -27,7 +27,6 @@ except ImportError:  # pragma: no cover - shown only when dependency is missing.
 
 ENV_FILE = ".env"
 ENDPOINT_FILE = "remed_summary_15d_endpoint.txt"
-LOCAL_ENDPOINT_FILE = "remed_summary_15d_endpoint.local.txt"
 DEFAULT_CHARSET = "utf8"
 DEFAULT_TIMEOUT = 60
 DEFAULT_LOG_TIMEZONE = "Asia/Bangkok"
@@ -297,8 +296,7 @@ def main() -> int:
     if not sql_path.is_absolute():
         sql_path = base_dir / sql_path
 
-    endpoint_file = LOCAL_ENDPOINT_FILE if (base_dir / LOCAL_ENDPOINT_FILE).exists() else ENDPOINT_FILE
-    endpoint_path = Path(os.getenv("REMED_SUMMARY_15D_ENDPOINT_FILE", endpoint_file))
+    endpoint_path = Path(os.getenv("REMED_SUMMARY_15D_ENDPOINT_FILE", ENDPOINT_FILE))
     if not endpoint_path.is_absolute():
         endpoint_path = base_dir / endpoint_path
 
