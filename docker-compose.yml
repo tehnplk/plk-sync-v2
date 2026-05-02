@@ -1,5 +1,5 @@
 services:
-  visit-sync-cron:
+  plk-sync-cron:
     build: .
     container_name: plk-sync-v2
     restart: unless-stopped

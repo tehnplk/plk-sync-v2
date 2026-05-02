@@ -26,12 +26,13 @@ except ImportError:  # pragma: no cover - shown only when dependency is missing.
 
 
 ENV_FILE = ".env"
+ENDPOINT_FILE = "visit_type_count_endpoint.txt"
 DEFAULT_CHARSET = "utf8"
 DEFAULT_TIMEOUT = 60
 API_FIELDS = ("hoscode", "visit_date", "visit_type_2", "visit_type_3", "visit_type_5")
 SQL_FILES = {
-    "mysql": "mysql_visit_type_count.sql",
-    "postgres": "postgres_visit_type_count.sql",
+    "mysql": "visit_type_count_my.sql",
+    "postgres": "visit_type_count_pg.sql",
 }
 DEFAULT_LOG_TIMEZONE = "Asia/Bangkok"
 
@@ -137,6 +138,26 @@ def read_sql_statements(sql_path: Path) -> list[str]:
     if not statements:
         raise RuntimeError(f"No SQL statements found in {sql_path}")
     return statements
+
+
+def read_endpoint(path: Path) -> str:
+    if not path.exists():
+        raise RuntimeError(f"Missing endpoint file: {path}")
+
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if "=" in line:
+            key, value = line.split("=", 1)
+            if key.strip().lower() == "url":
+                endpoint = value.strip().strip('"').strip("'")
+                if endpoint:
+                    return endpoint
+        elif line.startswith(("http://", "https://")):
+            return line
+
+    raise RuntimeError(f"No endpoint URL found in {path}")
 
 
 def fetch_mysql_rows(sql_path: Path) -> list[dict[str, Any]]:
@@ -254,6 +275,10 @@ def main() -> int:
     if not sql_path.is_absolute():
         sql_path = base_dir / sql_path
 
+    endpoint_path = Path(os.getenv("VISIT_TYPE_DAILY_ENDPOINT_FILE", ENDPOINT_FILE))
+    if not endpoint_path.is_absolute():
+        endpoint_path = base_dir / endpoint_path
+
     timeout = env_int("VISIT_TYPE_DAILY_TIMEOUT", DEFAULT_TIMEOUT)
     dry_run = env_bool("VISIT_TYPE_DAILY_DRY_RUN", default=False)
     pretty = env_bool("VISIT_TYPE_DAILY_PRETTY", default=True)
@@ -275,7 +300,7 @@ def main() -> int:
         log("info", "No records to post; skipped API request.")
         return 0
 
-    endpoint = require_env("VISIT_TYPE_DAILY_API_URL")
+    endpoint = os.getenv("VISIT_TYPE_DAILY_API_URL") or read_endpoint(endpoint_path)
     result = post_payload(endpoint, payload, timeout)
     log("info", f"POST completed with status_code={result['status_code']}")
     result_text = json.dumps(result, ensure_ascii=False, separators=(",", ":"))

@@ -1,0 +1,1 @@
+url = https://dashboard.plkhealth.go.th/telemedicine/api/visit-type-daily

@@ -1,0 +1,9 @@
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+CRON_TZ=Asia/Bangkok
+
+# Run every day at 07:30 and 16:00 (container timezone).
+30 7 * * * root cd /workspace && /usr/local/bin/python /workspace/visit_type_count_sync.py >> /workspace/logs/visit_type_count_sync.log 2>&1
+30 7 * * * root cd /workspace && /usr/local/bin/python /workspace/remed_summary_15d_sync.py >> /workspace/logs/remed_sync.log 2>&1
+0 16 * * * root cd /workspace && /usr/local/bin/python /workspace/visit_type_count_sync.py >> /workspace/logs/visit_type_count_sync.log 2>&1
+0 16 * * * root cd /workspace && /usr/local/bin/python /workspace/remed_summary_15d_sync.py >> /workspace/logs/remed_sync.log 2>&1

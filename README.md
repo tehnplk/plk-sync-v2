@@ -28,13 +28,14 @@ docker compose up -d --build
 ```bash
 docker compose ps
 docker exec plk-sync-v2 crontab -l
-tail -f logs/visit_sync.log
+tail -f logs/visit_type_count_sync.log
+tail -f logs/remed_sync.log
 ```
 
 ## อัปเดตโค้ด
 
 - ถ้าแก้ `.py`, `.sql`, `.env` ไม่ต้อง build ใหม่
-- ถ้าแก้ `Dockerfile` หรือ `docker/cron/visit-sync.cron` ให้รัน:
+- ถ้าแก้ `Dockerfile` หรือ `docker/cron/plk-sync.cron` ให้รัน:
 
 ```bash
 docker compose up -d --build
