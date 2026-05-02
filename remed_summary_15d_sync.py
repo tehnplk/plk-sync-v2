@@ -140,9 +140,12 @@ def read_sql_statements(sql_path: Path) -> list[str]:
     return statements
 
 
-def read_endpoint(path: Path) -> str:
+def read_endpoint_config(path: Path) -> tuple[str, dict[str, str]]:
     if not path.exists():
         raise RuntimeError(f"Missing endpoint file: {path}")
+
+    endpoint = ""
+    headers: dict[str, str] = {}
 
     for raw_line in path.read_text(encoding="utf-8").splitlines():
         line = raw_line.strip()
@@ -150,14 +153,22 @@ def read_endpoint(path: Path) -> str:
             continue
         if "=" in line:
             key, value = line.split("=", 1)
-            if key.strip().lower() == "url":
-                endpoint = value.strip().strip('"').strip("'")
-                if endpoint:
-                    return endpoint
+            key = key.strip().lower()
+            value = value.strip().strip('"').strip("'")
+            if key == "url":
+                endpoint = value
+            elif key == "token" and value:
+                headers["Authorization"] = f"Bearer {value}"
+            elif key == "authorization" and value:
+                headers["Authorization"] = value
+            elif key in {"api_key", "x-api-key"} and value:
+                headers["X-API-Key"] = value
         elif line.startswith(("http://", "https://")):
-            return line
+            endpoint = line
 
-    raise RuntimeError(f"No endpoint URL found in {path}")
+    if not endpoint:
+        raise RuntimeError(f"No endpoint URL found in {path}")
+    return endpoint, headers
 
 
 def fetch_mysql_rows(sql_path: Path) -> list[dict[str, Any]]:
@@ -244,12 +255,21 @@ def normalize_record(row: dict[str, Any]) -> dict[str, Any]:
     return record
 
 
-def post_payload(url: str, payload: list[dict[str, Any]], timeout: int) -> dict[str, Any]:
+def post_payload(
+    url: str,
+    payload: list[dict[str, Any]],
+    timeout: int,
+    headers: dict[str, str] | None = None,
+) -> dict[str, Any]:
     body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+    request_headers = {"Content-Type": "application/json"}
+    if headers:
+        request_headers.update(headers)
+
     request = Request(
         url,
         data=body,
-        headers={"Content-Type": "application/json"},
+        headers=request_headers,
         method="POST",
     )
 
@@ -284,7 +304,10 @@ def main() -> int:
     dry_run = env_bool("REMED_SUMMARY_15D_DRY_RUN", default=False)
     pretty = env_bool("REMED_SUMMARY_15D_PRETTY", default=True)
 
-    endpoint = os.getenv("REMED_SUMMARY_15D_API_URL") or read_endpoint(endpoint_path)
+    endpoint_headers: dict[str, str] = {}
+    endpoint = os.getenv("REMED_SUMMARY_15D_API_URL")
+    if not endpoint:
+        endpoint, endpoint_headers = read_endpoint_config(endpoint_path)
     rows = fetch_rows(sql_path)
     payload = [normalize_record(row) for row in rows]
 
@@ -301,7 +324,7 @@ def main() -> int:
         log("info", "No records to post; skipped API request.")
         return 0
 
-    result = post_payload(endpoint, payload, timeout)
+    result = post_payload(endpoint, payload, timeout, endpoint_headers)
     log("info", f"POST completed with status_code={result['status_code']}")
     result_text = json.dumps(result, ensure_ascii=False, separators=(",", ":"))
     log("info", f"Response: {result_text}")

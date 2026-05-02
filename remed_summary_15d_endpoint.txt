@@ -1,1 +1,2 @@
-url = https://datacenter.plkhealth.go.th/api/remed-15d
+url = https://dashboard.plkhealth.go.th/telemedicine/api/remed-15d
+# token = paste_token_here
