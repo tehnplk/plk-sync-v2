@@ -2,13 +2,14 @@ from __future__ import annotations
 
 import json
 import os
-import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 from zoneinfo import ZoneInfo
+
+from dotenv import load_dotenv
 
 try:
     import pymysql
@@ -41,21 +42,6 @@ def log(level: str, message: str) -> None:
     timezone_name = os.getenv("SYNC_TIMEZONE", DEFAULT_LOG_TIMEZONE)
     timestamp = datetime.now(ZoneInfo(timezone_name)).strftime("%Y-%m-%d %H:%M:%S")
     print(f"{timestamp} - {level.upper()} - {message}")
-
-
-def load_env(path: Path) -> None:
-    if not path.exists():
-        return
-
-    for raw_line in path.read_text(encoding="utf-8").splitlines():
-        line = raw_line.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-
-        key, value = line.split("=", 1)
-        key = key.strip()
-        value = value.strip().strip('"').strip("'")
-        os.environ.setdefault(key, value)
 
 
 def require_env(name: str) -> str:
@@ -266,9 +252,7 @@ def post_payload(url: str, payload: list[dict[str, Any]], timeout: int) -> dict[
 
 def main() -> int:
     base_dir = Path(__file__).resolve().parent
-    env_path = base_dir / ENV_FILE
-
-    load_env(env_path)
+    load_dotenv(dotenv_path=base_dir / ENV_FILE, override=False)
 
     db_type = get_db_type()
     sql_path = Path(os.getenv("SQL_FILE", SQL_FILES[db_type]))
