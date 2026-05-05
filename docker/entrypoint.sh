@@ -20,5 +20,8 @@ cd /workspace
 run_sync "visit_type_count_sync.py" "/workspace/logs/visit_type_count_sync.log" || true
 run_sync "remed_summary_15d_sync.py" "/workspace/logs/remed_sync.log" || true
 
+# Start version endpoint in the background; cron remains the foreground process.
+/usr/local/bin/python /workspace/version_app.py >> /workspace/logs/version_server.log 2>&1 &
+
 # Cron reads /etc/cron.d/plk-sync directly.
 exec cron -f

@@ -8,6 +8,8 @@ services:
       - .env
     environment:
       - TZ=Asia/Bangkok
+    ports:
+      - "5000:5000"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
