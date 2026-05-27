@@ -1,0 +1,2 @@
+url = https://dashboard.plkhealth.go.th/homedelivery/api/drug-home-daily
+token = plkhealth00051
