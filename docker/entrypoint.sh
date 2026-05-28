@@ -3,22 +3,30 @@ set -eu
 
 mkdir -p /workspace/logs
 
+# ค้นหาพาธของ python ที่ถูกต้องในระบบ
+PYTHON_BIN="python"
+if command -v python3 >/dev/null 2>&1; then
+  PYTHON_BIN="python3"
+elif command -v python >/dev/null 2>&1; then
+  PYTHON_BIN="python"
+elif [ -x "/usr/local/bin/python" ]; then
+  PYTHON_BIN="/usr/local/bin/python"
+fi
+
 run_sync() {
   script="$1"
   log_file="$2"
-  extra_args=""
-  if [ "$#" -ge 3 ]; then
-    extra_args="$3"
-  fi
+  shift 2 || true
+  extra_args="$*"
 
   echo "$(date '+%Y-%m-%d %H:%M:%S') - INFO - Starting ${script} ${extra_args}" >> "${log_file}"
   if [ -n "${extra_args}" ]; then
-    if ! /usr/local/bin/python "/workspace/${script}" "${extra_args}" >> "${log_file}" 2>&1; then
+    if ! ${PYTHON_BIN} "/workspace/${script}" ${extra_args} >> "${log_file}" 2>&1; then
       echo "$(date '+%Y-%m-%d %H:%M:%S') - ERROR - ${script} failed; cron will continue." >> "${log_file}"
       return 1
     fi
   else
-    if ! /usr/local/bin/python "/workspace/${script}" >> "${log_file}" 2>&1; then
+    if ! ${PYTHON_BIN} "/workspace/${script}" >> "${log_file}" 2>&1; then
       echo "$(date '+%Y-%m-%d %H:%M:%S') - ERROR - ${script} failed; cron will continue." >> "${log_file}"
       return 1
     fi
@@ -42,7 +50,14 @@ else
 fi
 
 # Start version endpoint in the background; cron remains the foreground process.
-/usr/local/bin/python /workspace/version_app.py >> /workspace/logs/version_server.log 2>&1 &
+${PYTHON_BIN} /workspace/version_app.py >> /workspace/logs/version_server.log 2>&1 &
 
-# Cron reads /etc/cron.d/plk-sync directly.
-exec cron -f
+# ค้นหาและรัน cron daemon ที่เหมาะสมกับ OS (cron สำหรับ Debian/Ubuntu, crond สำหรับ Alpine)
+if command -v cron >/dev/null 2>&1; then
+  exec cron -f
+elif command -v crond >/dev/null 2>&1; then
+  exec crond -f -d 8
+else
+  echo "$(date '+%Y-%m-%d %H:%M:%S') - ERROR - Neither cron nor crond found!" >> /workspace/logs/cron_error.log 2>&1
+  exit 1
+fi
