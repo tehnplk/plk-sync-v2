@@ -6,7 +6,10 @@ mkdir -p /workspace/logs
 run_sync() {
   script="$1"
   log_file="$2"
-  extra_args="${3:-}"
+  extra_args=""
+  if [ "$#" -ge 3 ]; then
+    extra_args="$3"
+  fi
 
   echo "$(date '+%Y-%m-%d %H:%M:%S') - INFO - Starting ${script} ${extra_args}" >> "${log_file}"
   if [ -n "${extra_args}" ]; then
